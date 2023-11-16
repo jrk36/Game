@@ -1,1 +1,752 @@
+import os.path
+import sys
+import random
 
+#CHECKING FILES
+#scenario
+scenarioPath = 'game scenario.txt'
+scenarioFileCheck = os.path.isfile(scenarioPath)
+if scenarioFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+    
+#setting up
+settingOffPath = 'game setting off.txt'
+settingOffFileCheck = os.path.isfile(settingOffPath)
+if settingOffFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+
+#the encounter
+theEncounterPath = 'game the encounter.txt'
+theEncounterFileCheck = os.path.isfile(theEncounterPath)
+if theEncounterFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+
+#enter main room for first time
+mainRoomPath = 'game main room.txt'
+mainRoomFileCheck = os.path.isfile(mainRoomPath)
+if mainRoomFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+
+#enter kitchen for first time
+kitchenPath = 'game kitchen.txt'
+kitchenFileCheck = os.path.isfile(kitchenPath)
+if kitchenFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+
+#enter bedroom for first time
+bedroomPath = 'game bedroom.txt'
+bedroomFileCheck = os.path.isfile(bedroomPath)
+if bedroomFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+
+#enter hidden room for first time
+hiddenRoomPath = 'game hidden room.txt'
+hiddenRoomFileCheck = os.path.isfile(hiddenRoomPath)
+if hiddenRoomFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+
+#enter basement
+basementPath = 'game basement.txt'
+basementFileCheck = os.path.isfile(basementPath)
+if basementFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+
+#re-enter main room (simpler)
+simpleMainRoomPath = 'game simple main room.txt'
+simpleMainRoomFileCheck = os.path.isfile(simpleMainRoomPath)
+if simpleMainRoomFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+
+#re-enter kitchen (simpler)
+simpleKitchenPath = 'game simple kitchen.txt'
+simpleKitchenFileCheck = os.path.isfile(simpleKitchenPath)
+if simpleKitchenFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+
+#re-enter bedroom (simpler)
+simpleBedroomPath = 'game simple bedroom.txt'
+simpleBedroomFileCheck = os.path.isfile(simpleBedroomPath)
+if simpleBedroomFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+
+#re-enter bedroom with hidden room found
+simpleBedroomTwoPath = 'game simple bedroom version two.txt'
+simpleBedroomTwoFileCheck = os.path.isfile(simpleBedroomTwoPath)
+if simpleBedroomTwoFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+
+#re-enter hidden room (simpler)
+simpleHiddenRoomPath = 'game simple hidden room.txt'
+simpleHiddenRoomFileCheck = os.path.isfile(simpleHiddenRoomPath)
+if simpleHiddenRoomFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+
+#hidden room: tiara
+tiaraPath = 'game tiara.txt'
+tiaraFileCheck = os.path.isfile(tiaraPath)
+if tiaraFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+
+#hidden room: tornado
+tornadoPath = 'game tornado.txt'
+tornadoFileCheck = os.path.isfile(tornadoPath)
+if tornadoFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+
+#hidden room: orb
+orbPath = 'game orb.txt'
+orbFileCheck = os.path.isfile(orbPath)
+if orbFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+
+#main room weapon
+weaponPath = 'game weapon.txt'
+weaponFileCheck = os.path.isfile(weaponPath)
+if weaponFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+
+#bedroom chest
+chestPath = 'game chest.txt'
+chestFileCheck = os.path.isfile(chestPath)
+if chestFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+
+#success statement
+successPath = 'game success.txt'
+successFileCheck = os.path.isfile(successPath)
+if successFileCheck != True:
+    print('A required file does not exist.')
+    sys.exit()
+
+#BEGIN ADVENTURE
+inScenarioFile = open(scenarioPath, 'r')
+readInScenarioFile = inScenarioFile.read()
+print(readInScenarioFile)
+inScenarioFile.close()
+
+inSettingOffFile = open(settingOffPath, 'r')
+readInSettingOffFile = inSettingOffFile.read()
+print(readInSettingOffFile)
+inSettingOffFile.close()
+
+inTheEncounterFile = open(theEncounterPath, 'r')
+readInTheEncounterFile = inTheEncounterFile.read()
+print(readInTheEncounterFile)
+inTheEncounterFile.close()
+
+#keep track of things that can only happen a limited number of times (once)
+#0 = it hasn't happened/you don't have it, 1 = it has happened/you have it
+#used 0 and 1 v. T and F because investigationBonus, potionBonus, etc. are directly added to player stats; just staying consistent for the others
+bedroomEntry = 0
+kitchenEntry = 0
+investigationBonus = 0
+bedroomSearch = 0
+potionFound = 0
+potionBonus = 0
+grylaBattle = 0
+persuade = 0
+consider = 0
+flee = 0
+keyPossession = 0
+
+#START OF USER INPUT
+enterFleeLoop = False
+while enterFleeLoop != True:
+
+    testingLoopOne = False
+    while testingLoopOne != True:
+
+        enterOrFlee = input('Would you like to 1. enter or 2. flee? \n')
+        
+        try:
+            enterOrFleeInteger = int(enterOrFlee)
+            testingLoopOne = True
+        except:
+            print('*Please enter 1 or 2*\n')
+
+    #ENTER HOUSE
+    if enterOrFleeInteger == 1:
+        
+        inMainRoomFile = open(mainRoomPath, 'r')
+        readInMainRoomFile = inMainRoomFile.read()
+        print(readInMainRoomFile)
+        inMainRoomFile.close()
+
+        enterLoop = False
+        while enterLoop != True:
+
+            testingLoopTwo = False
+            while testingLoopTwo != True:
+
+                chooseAction = input('Would you like to 1. enter the room to the left, 2. enter the room to the right, or 3. investigate the decorations? \n')
+
+                try:
+                    chooseActionInteger = int(chooseAction)
+                    testingLoopTwo = True
+                except:
+                    print('*Please enter 1, 2, or 3*\n')
+
+            #LEFT ROOM: KITCHEN
+            if chooseActionInteger == 1:
+                
+                if kitchenEntry == 0:
+                                        
+                    inKitchenFile = open(kitchenPath, 'r')
+                    readInKitchenFile = inKitchenFile.read()
+                    print(readInKitchenFile)
+                    inKitchenFile.close()
+
+                    kitchenEntry = 1
+
+                elif kitchenEntry == 1:
+                    
+                    inSimpleKitchenFile = open(simpleKitchenPath, 'r')
+                    readInSimpleKitchenFile = inSimpleKitchenFile.read()
+                    print(readInSimpleKitchenFile)
+                    inSimpleKitchenFile.close()
+                    
+                kitchenLoop = False
+                while kitchenLoop != True:
+
+                    testingLoopThree = False
+                    while testingLoopThree != True:
+
+                        chooseKitchenAction = input('Would you like to 1. search the area, 2. exit back to the main room, or 3. go down the stairs? \n')
+
+                        try:
+                            chooseKitchenActionInteger = int(chooseKitchenAction)
+                            testingLoopThree = True
+                        except:
+                            print('*Please enter 1, 2, or 3*\n')
+
+                    #SEARCH KITCHEN
+                    if chooseKitchenActionInteger == 1:
+                        print('Nothing was found in the search.\n')
+                    
+                    #EXIT KITCHEN
+                    elif chooseKitchenActionInteger == 2:
+                        inSimpleMainRoomFile = open(simpleMainRoomPath, 'r')
+                        readInSimpleMainRoomFile = inSimpleMainRoomFile.read()
+                        print(readInSimpleMainRoomFile)
+                        inSimpleMainRoomFile.close()
+                        
+                        kitchenLoop = True
+
+                    #GO DOWNSTAIRS
+                    elif chooseKitchenActionInteger == 3:
+
+                        #BATTLE
+                        if grylaBattle == 0:
+                            inBasementFile = open(basementPath, 'r')
+                            readInBasementFile = inBasementFile.read()
+                            print(readInBasementFile)
+                            inBasementFile.close()
+                            
+                            print('Gryla is there, ready to battle!\n')
+
+                            if potionBonus == 1:
+                                print('-and you\'re glowing! It must have been the potion. This light will give you +5 strength against Gryla!\n')
+                                
+                            grylaHealth = 2
+                            playerHealth = 2 + potionBonus
+
+                            fleeLoop = True
+                            battleLoop = False
+                            while battleLoop != True:
+
+                                #FLEE CONDITION
+                                if consider == 1 and persuade == 1 and flee == 0:
+                                    fleeLoop = False
+                                    
+                                while fleeLoop != True:
+
+                                    flee = 1
+                                    
+                                    testingLoopFive = False
+                                    while testingLoopFive != True:
+
+                                        battleFlee = input('Would you like to 1. flee or 2. continue? \n')
+
+                                        try:
+                                            battleFleeInteger = int(battleFlee)
+                                            testingLoopFive = True
+                                        except:
+                                            print('*Please enter 1 or 2*\n')
+
+                                    if battleFleeInteger == 1:
+                                        print('You retreat from the battle with Gryla. Game over.')
+                                        sys.exit()
+
+                                    elif battleFleeInteger == 2:
+                                        fleeLoop = True
+
+                                    else:
+                                        print('*Please enter 1 or 2*\n')
+
+                                #REGULAR BATTLE ACTIONS
+                                testingLoopFour = False
+                                while testingLoopFour != True:
+
+                                    battleMove = input('Would you like to 1. attack Gryla, 2. persuade Gryla not to fight, or 3. consider Gryla more closely? \n')
+
+                                    try:
+                                        battleMoveInteger = int(battleMove)
+                                        testingLoopFour = True
+                                    except:
+                                        print('*Please enter 1, 2, or 3*\n')
+
+                                #BATTLE: ATTACK
+                                if battleMoveInteger == 1:                                    
+                                    playerRoll = random.randint(1, 20)
+                                    playerRollModified = playerRoll + investigationBonus
+
+                                    #to prevent confusion for player on what is and isn't a critical hit
+                                    if playerRollModified >= 20:
+                                        playerRollModified = 19
+                                        
+                                    #keep naturally rolled 20s as is
+                                    elif playerRoll == 20:
+                                        playerRollModified = 20
+                                        
+                                    #keep naturally rolled 1s as is
+                                    elif playerRoll == 1:
+                                        playerRollModified = 1
+
+                                    grylaRoll = random.randint(1, 20)
+                                    grylaRollModified = grylaRoll - 4
+
+                                    if grylaRollModified < 1:
+                                        grylaRollModified = 1
+                                        
+                                    print('You rolled a ', playerRollModified, '\n')
+
+                                    if playerRollModified >= 12:
+                                        
+                                        #only a critical hit when a natural 20 is rolled
+                                        if playerRollModified == 20:
+                                            print('Victory! You\'ve defeated Gryla.\n')
+                                            battleLoop = True
+                                            
+                                        else:
+                                            print('You dealt Gryla a critical blow!\n')
+                                            grylaHealth = grylaHealth - 1
+
+                                            if grylaHealth == 0:
+                                                print('Victory! You\'ve defeated Gryla.\n')
+                                                battleLoop = True
+
+                                            else:
+                                                print('Gryla rolled a ', grylaRollModified, '\n')
+
+                                                if grylaRollModified >= 12:
+                                                    print('Gryle dealt you a critical blow!\n')
+                                                    playerHealth = playerHealth - 1
+                                
+                                                    if playerHealth == 0:
+                                                        print('A devistating defeat. Gryla has bested you.')
+                                                        sys.exit()
+
+                                    if playerRollModified < 12:
+
+                                        #only a critical fail when a natural 1 is rolled
+                                        if playerRollModified == 1:
+                                            print('Oh no! A critical failure! Gryla has recovered some health.\n')
+                                            grylaHealth = grylaHealth + 1
+                                            
+                                        print('Gryla rolled a ', grylaRollModified, '\n')
+
+                                        if grylaRollModified >= 12:
+                                            print('Gryle dealt you a critical blow!\n')
+                                            playerHealth = playerHealth - 1
+
+                                            if playerHealth == 0:
+                                                print('A devistating defeat. Gryla has bested you.')
+                                                sys.exit()
+
+                                    grylaHealthDisplay = grylaHealth * 5
+                                    playerHealthDisplay = playerHealth * 5
+
+                                    if battleLoop == False:
+                                        print('Gryla Health: ', grylaHealthDisplay, '/10')
+                                        print('Player Health: ', playerHealthDisplay, '/10\n')
+
+                                #BATTLE: PERSUADE
+                                elif battleMoveInteger == 2:
+
+                                    if persuade == 0:
+
+                                        persuadeLoop = False
+                                        while persuadeLoop != True:
+
+                                            playerRoll = random.randint(1, 20)
+                                            playerRollModified = playerRoll + investigationBonus
+
+                                            if playerRollModified > 20:
+                                                playerRollModified = 20
+                                            
+                                            print('You rolled a ', playerRollModified, '\n')
+
+                                            grylaRoll = random.randint(1, 20)
+                                            grylaRollModified = grylaRoll + 4
+
+                                            if grylaRollModified > 20:
+                                                grylaRollModified = 20
+                                            
+                                            print('Gryla rolled a ', grylaRollModified, '\n')
+                                            
+                                            if playerRollModified > grylaRollModified:
+                                                print('Victory! You\'ve convinced Gryla to retreat.\n')
+                                                battleLoop = True
+                                                persuadeLoop = True
+
+                                            elif playerRollModified < grylaRollModified:
+                                                print('You were unable to convince Gryla to retreat.\n')
+                                                persuadeLoop = True
+                                                
+                                            else:
+                                                print('You are at an impass, but there is still hope!\n')
+
+                                        persuade = 1
+
+                                    else:
+                                        print('You have already tried this. Try something else.\n')
+                                    
+                                #BATTLE: CONSIDER
+                                elif battleMoveInteger == 3:
+
+                                    if consider == 0:
+
+                                        considerLoop = False
+                                        while considerLoop != True:
+
+                                            playerRoll = random.randint(1, 20)
+                                            playerRollModified = playerRoll + investigationBonus
+
+                                            if playerRollModified > 20:
+                                                playerRollModified = 20
+                                            
+                                            print('You rolled a ', playerRollModified, '\n')
+
+                                            grylaRoll = random.randint(1, 20)
+                                            grylaRollModified = grylaRoll - 2
+
+                                            if grylaRollModified < 1:
+                                                grylaRollModified = 1
+
+                                            print('Gryla rolled a ', grylaRollModified, '\n')
+
+                                            if playerRollModified > grylaRollModified:
+                                                print('Victory! You\'ve discovered that Gryla is simply cursed and you break the spell.\n')
+                                                battleLoop = True
+                                                considerLoop = True
+
+                                            elif playerRollModified < grylaRollModified:
+                                                print('Your investigation was unsuccessful.\n')
+                                                considerLoop = True
+
+                                            else:
+                                                print('Hmm... You were unable to find anything, but you aren\'t done searching yet!\n')
+
+                                        consider = 1
+
+                                    else:
+                                        print('You have already tried this. Try something else.\n')
+
+                                else:
+                                    print('*Please enter 1, 2, or 3*\n')
+
+                            grylaBattle = 1
+
+                            print('What\'s this? A key?')  
+                            keyPossession = 1
+                            print('What do you think it unlocks?\n')
+                            
+                            print('You walk back up the stairs into the kitchen.\n')
+
+                            inSimpleKitchenFile = open(simpleKitchenPath, 'r')
+                            readInSimpleKitchenFile = inSimpleKitchenFile.read()
+                            print(readInSimpleKitchenFile)
+                            inSimpleKitchenFile.close()
+                            
+                        elif grylaBattle == 1:
+                            inBasementFile = open(basementPath, 'r')
+                            readInBasementFile = inBasementFile.read()
+                            print(readInBasementFile)
+                            inBasementFile.close()
+                            
+                            print('Upon inspection, you find nothing, so you walk back up the stairs.')
+
+                            inSimpleKitchenFile = open(simpleKitchenPath, 'r')
+                            readInSimpleKitchenFile = inSimpleKitchenFile.read()
+                            print(readInSimpleKitchenFile)
+                            inSimpleKitchenFile.close()
+
+                    else:
+                        print('*Please enter 1, 2, or 3*\n')
+
+            #RIGHT ROOM: BEDROOM
+            elif chooseActionInteger == 2:
+                
+                if bedroomEntry == 0:
+                    inBedroomFile = open(bedroomPath, 'r')
+                    readInBedroomFile = inBedroomFile.read()
+                    print(readInBedroomFile)
+                    inBedroomFile.close()
+
+                    bedroomEntry = 1
+
+                elif bedroomEntry == 1:
+
+                    if bedroomSearch == 0:
+                        inSimpleBedroomFile = open(simpleBedroomPath, 'r')
+                        readInSimpleBedroomFile = inSimpleBedroomFile.read()
+                        print(readInSimpleBedroomFile)
+                        inSimpleBedroomFile.close()
+
+                    elif bedroomSearch == 1:
+                        inSimpleBedroomTwoFile = open(simpleBedroomTwoPath, 'r')
+                        readInSimpleBedroomTwoFile = inSimpleBedroomTwoFile.read()
+                        print(readInSimpleBedroomTwoFile)
+                        inSimpleBedroomTwoFile.close()
+
+                hiddenRoomLoop = False
+
+                bedroomLoop = False
+                while bedroomLoop != True:
+
+                    testingLoopSix = False
+                    while testingLoopSix != True:
+                                            
+                        if bedroomSearch == 0:
+                            chooseBedroomAction = input('Would you like to 1. search the area, 2. exit back to the main room, or 3. attempt to open the chest? \n')
+
+                            try:
+                                chooseBedroomActionInteger = int(chooseBedroomAction)
+                                testingLoopSix = True
+                            except:
+                                print('*Please enter 1, 2, or 3*\n')
+
+                        elif bedroomSearch == 1:
+                            chooseBedroomAction = input('Would you like to 1. search the area, 2. exit back to the main room, 3. attempt to open the chest, or 4. enter the hidden room? \n')
+                            
+                            try:
+                                chooseBedroomActionInteger = int(chooseBedroomAction)
+                                testingLoopSix = True
+                            except:
+                                print('*Please enter 1, 2, 3, or 4*\n')
+
+                    #SEARCH BEDROOM
+                    if chooseBedroomActionInteger == 1:
+                                                
+                        if bedroomSearch == 0:
+                            inHiddenRoomFile = open(hiddenRoomPath, 'r')
+                            readInHiddenRoomFile = inHiddenRoomFile.read()
+                            print(readInHiddenRoomFile)
+                            inHiddenRoomFile.close()
+
+                            bedroomSearch = 1
+                            hiddenRoomLoop = True
+
+                        elif bedroomSearch == 1:
+                            print('Nothing else was found in the search.\n')
+                  
+                    #EXIT BEDROOM
+                    elif chooseBedroomActionInteger == 2:
+                        inSimpleMainRoomFile = open(simpleMainRoomPath, 'r')
+                        readInSimpleMainRoomFile = inSimpleMainRoomFile.read()
+                        print(readInSimpleMainRoomFile)
+                        inSimpleMainRoomFile.close()
+                        
+                        bedroomLoop = True
+
+                    #OPEN BEDROOM CHEST
+                    elif chooseBedroomActionInteger == 3:
+
+                        if keyPossession == 1:
+                            print('The chest opened!\n')
+                            
+                            inChestFile = open(chestPath, 'r')
+                            readInChestFile = inChestFile.read()
+                            print(readInChestFile)
+                            inChestFile.close()
+
+                            print('Mission complete!\n')
+
+                            inSuccessFile = open(successPath, 'r')
+                            readInSuccessFile = inSuccessFile.read()
+                            print(readInSuccessFile)
+                            inSuccessFile.close()
+
+                            if investigationBonus == 1:
+                                print('Gryla\'s Dagger')
+
+                            if potionBonus == 1:
+                                print('Empty Glass Vial')
+
+                            sys.exit()
+
+                        else:
+                            print('You try to open the chest, but it\'s locked.\n')
+
+                    #ENTER HIDDEN ROOM
+                    elif chooseBedroomActionInteger == 4:
+
+                        if bedroomSearch == 0:
+                            print('*Please enter 1, 2, or 3*\n')
+
+                        elif bedroomSearch == 1:
+                            inSimpleHiddenRoomFile = open(simpleHiddenRoomPath, 'r')
+                            readInSimpleHiddenRoomFile = inSimpleHiddenRoomFile.read()
+                            print(readInSimpleHiddenRoomFile)
+                            inSimpleHiddenRoomFile.close()
+                            
+                            hiddenRoomLoop = True
+                        
+                    else:
+
+                        if bedroomSearch == 0:
+                            print('*Please enter 1, 2, or 3*\n')
+
+                        elif bedroomSearch == 1:
+                            print('*Please enter 1, 2, 3, or 4*\n')
+
+                    #HIDDEN ROOM
+                    while hiddenRoomLoop != False:
+
+                        testingLoopSeven = False
+                        while testingLoopSeven != True:
+
+                            hiddenRoomAction = input('Would you like to 1. investigate the tiara, 2. investigate the tornado-like object, 3. investigate the orb, or 4. exit back to the bedroom? \n')
+
+                            try:
+                                hiddenRoomActionInteger = int(hiddenRoomAction)
+                                testingLoopSeven = True
+                            except:
+                                print('*Please enter 1, 2, 3, or 4*\n')
+
+                        #OBJECT ONE: TIARA
+                        if hiddenRoomActionInteger == 1:
+                            inTiaraFile = open(tiaraPath, 'r')
+                            readInTiaraFile = inTiaraFile.read()
+                            print(readInTiaraFile)
+                            inTiaraFile.close()
+
+                        #OBJECT TWO: TORNADO
+                        elif hiddenRoomActionInteger == 2:
+                            inTornadoFile = open(tornadoPath, 'r')
+                            readInTornadoFile = inTornadoFile.read()
+                            print(readInTornadoFile)
+                            inTornadoFile.close()
+
+                        #OBJECT THREE: ORB
+                        elif hiddenRoomActionInteger == 3:
+                            inOrbFile = open(orbPath, 'r')
+                            readInOrbFile = inOrbFile.read()
+                            print(readInOrbFile)
+                            inOrbFile.close()
+                                
+                            potionLoopOne = False
+                            while potionLoopOne != True:
+
+                                potionLoopTwo = False
+
+                                if potionFound == 0:
+                                    print('A glass vial with a glowing liquid sits inside...')
+                                    print('It\'s a potion!\n')
+                                    potionFound = 1
+
+                                elif potionFound == 1:
+
+                                    if potionBonus == 0:
+                                        print('The potion still glows eerily.\n')
+
+                                    elif potionBonus == 1:
+                                        print('Nothing else is inside.\n')
+                                        print('. . .\n')
+                                        potionLoopTwo = True
+                                        potionLoopOne = True
+                                        
+                                while potionLoopTwo != True:
+
+                                    testingLoopEight = False
+                                    while testingLoopEight != True:
+
+                                        potionAction = input('Would you like to 1. drink the potion or 2. leave it be? \n')
+
+                                        try:
+                                            potionActionInteger = int(potionAction)
+                                            testingLoopEight = True
+                                        except:
+                                            print('*Please enter 1 or 2*\n')
+
+                                    if potionActionInteger == 1:
+                                        potionBonus = 1
+                                        print('You drank the potion!')
+                                        print('But nothing happened...\n')
+                                        print('. . .\n')
+                                        potionLoopOne = True
+                                        potionLoopTwo = True
+
+                                    elif potionActionInteger == 2:
+                                        print('You ignore the potion and put down the orb.\n')
+                                        print('. . .\n')
+                                        potionLoopOne = True
+                                        potionLoopTwo = True
+
+                                    else:
+                                        print('*Please enter 1 or 2*\n')
+
+                        #EXIT HIDDEN ROOM
+                        elif hiddenRoomActionInteger == 4:
+                            inSimpleBedroomTwoFile = open(simpleBedroomTwoPath, 'r')
+                            readInSimpleBedroomTwoFile = inSimpleBedroomTwoFile.read()
+                            print(readInSimpleBedroomTwoFile)
+                            inSimpleBedroomTwoFile.close()
+
+                            hiddenRoomLoop = False
+
+                        else:
+                            print('*Please enter 1, 2, 3, or 4*\n')
+                
+            #INVESTIGATE MAIN ROOM DECORATIONS
+            elif chooseActionInteger == 3:
+
+                if investigationBonus == 0:
+                    inWeaponFile = open(weaponPath, 'r')
+                    readInWeaponFile = inWeaponFile.read()
+                    print(readInWeaponFile)
+                    inWeaponFile.close()
+                    
+                    investigationBonus = 1
+
+                else:
+                    print('You\'ve already searched here.\n')
+
+            else:
+                print('*Please enter 1, 2, or 3*\n')
+        
+    #FLEE HOUSE
+    elif enterOrFleeInteger == 2:
+        print('You ran away! Game over.')
+        sys.exit()
+
+    else:
+        print('*Please enter 1 or 2*\n')
